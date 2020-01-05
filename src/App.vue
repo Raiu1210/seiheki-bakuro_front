@@ -1,18 +1,21 @@
 <template>
   <div class="hello">
+    <!-- input for creating SVG -->
+    <h1>あなたの性癖をここに入力しよう</h1>
+    <input v-model="line1" class="seiheki-form" type="text" placeholder="1行目（２０文字以内）" maxlength='20'><br>
+    <input v-model="line2" class="seiheki-form" type="text" placeholder="2行目（２０文字以内）" maxlength='20'><br>
+    <input v-model="line3" class="seiheki-form" type="text" placeholder="3行目（２０文字以内）" maxlength='20'><br>
+  
     <!-- SVG preview -->
     <svg ref="svgCard" viewBox="0 0 200 100">
       <rect x="0" y="0" width="200" height="100" fill="#fff" stroke="#ff69b4" stroke-width="15"></rect>
-      <text 
-      x="50%" 
-      y="50%" 
-      font-size="8px"
-      text-anchor="middle">{{msg}}</text>
+      <text x="50%" y="40%" font-size="8px" text-anchor="middle">{{line1}}</text>
+      <text x="50%" y="50%" font-size="8px" text-anchor="middle">{{line2}}</text>
+      <text x="50%" y="60%" font-size="8px" text-anchor="middle">{{line3}}</text>
     </svg>
 
-    <!-- input for creating SVG -->
-    <input v-model="msg" type="text">
-    <button @click="create">create</button>
+    <button @click="create" class="create_img_button">性癖をツイート！</button>
+
   </div>
 </template>
 
@@ -55,23 +58,26 @@ export default {
   name: 'hello',
   data () {
     return {
-      msg: 'Hello World',
+      line1: '',
+      line2: '',
+      line3: '',
       uuid: '1', // 適当に採番する
-      description: 'Vue.jsとFirebaseでOGP生成アプリをつくってみます'
+      description: 'Vue.jsとFirebaseでOGP生成アプリをつくってみます',
+      tweet_url: 'まだ変わってない'
     }
   },
   methods: {
-    async create() {
+    create: async function() {
       // refでsvgCardをsvgに設定しているのでthis.$refs.svgCardで要素を取れます
-      svg2imageData(this.$refs.svgCard, async (data) => {
+      await svg2imageData(this.$refs.svgCard, async (data) => {
         const sRef = firebase.storage().ref()
         const now = Date.now()
         const fileRef = sRef.child(now + '.png')
+        this.tweet_url = "https://seiheki-bakuro.firebaseapp.com/bigben?image_name=" + now + ".png"
 
         // Firebase Cloud Storageにアップロード
         await fileRef.putString(data, 'data_url');
         const url = await fileRef.getDownloadURL()
-        // console.log(url)
 
         // Firestoreに保存しておく
         const card = db.collection('cards').doc(this.uuid)
@@ -80,9 +86,81 @@ export default {
           message: this.description
         });
       })
-
-      alert("画像生成したよ！")
+      // console.log(this.tweet_url)
+      // var shareURL = 'https://twitter.com/intent/tweet?text=' + "私の性癖暴露カード" + "%20%23性癖暴露" + '&url=' + this.tweet_url;
+      // location.href = shareURL
     }
   }
 }
 </script>
+
+
+<style>
+  input{
+    font-size:16px;
+  }
+  input[type="text"]:focus,
+  texture:focus {
+      box-shadow: 0 0 7px #3498db;
+      border: 1px solid #3498db;
+  }
+
+  .seiheki-form {
+    width: 80%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0.8em;
+    outline: none;
+    border: 1px solid #DDD;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    font-size: 16px;
+  }
+
+  .create_img_button {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0.5em 1em;
+    text-decoration: none;
+    border-radius: 4px;
+    color: #ffffff;
+    background-image: linear-gradient(45deg, rgb(253, 0, 241) 0%, #ff95e8 100%);
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.29);
+    border-bottom: solid 3px #c58668;
+    width: 300px;
+    height: 80px;
+    font-size: 28px;
+  }
+  .create_img_button:active {
+    -webkit-transform: translateY(4px);
+    transform: translateY(4px);
+    box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.2);
+    border-bottom: none;
+  }
+
+  h1 {
+    position: relative;
+    color: #ff3cef;
+    font-size: 20px;
+    padding: 10px 0;
+    text-align: center;
+    margin: 1.5em 0;
+  }
+  h1:before {
+    content: "";
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    width: 150px;
+    height: 58px;
+    border-radius: 50%;
+    border: 5px solid #f15ad8;
+    border-left-color: transparent;
+    border-right-color: transparent;
+    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%);
+  }
+</style>
