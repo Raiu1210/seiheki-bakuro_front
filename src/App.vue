@@ -67,14 +67,16 @@ export default {
     }
   },
   methods: {
-    create: async function() {
+    async create() {
       // refでsvgCardをsvgに設定しているのでthis.$refs.svgCardで要素を取れます
+      var tweet_url
+      var now = Date.now()
+      tweet_url = "https://seiheki-bakuro.firebaseapp.com/bigben?image_name=" + now + ".png"
+
       await svg2imageData(this.$refs.svgCard, async (data) => {
         const sRef = firebase.storage().ref()
-        const now = Date.now()
         const fileRef = sRef.child(now + '.png')
-        this.tweet_url = "https://seiheki-bakuro.firebaseapp.com/bigben?image_name=" + now + ".png"
-
+        
         // Firebase Cloud Storageにアップロード
         await fileRef.putString(data, 'data_url');
         const url = await fileRef.getDownloadURL()
@@ -86,9 +88,9 @@ export default {
           message: this.description
         });
       })
-      // console.log(this.tweet_url)
-      // var shareURL = 'https://twitter.com/intent/tweet?text=' + "私の性癖暴露カード" + "%20%23性癖暴露" + '&url=' + this.tweet_url;
-      // location.href = shareURL
+
+      const shareURL = 'https://twitter.com/intent/tweet?text=' + '私の性癖暴露カード' + '%20%23性癖暴露' + '&url=' + tweet_url;
+      location.href = shareURL
     }
   }
 }

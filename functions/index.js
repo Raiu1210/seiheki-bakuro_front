@@ -4,7 +4,7 @@ const functions = require('firebase-functions');
 exports.bigben = functions.https.onRequest((req, res) => {
     const SITEURL = "https://seiheki-bakuro.firebaseapp.com/#/"
     const TITLE = "性癖暴露カード"
-    const DESCRIPTION = "西壁を暴露するカードを作成します"
+    const DESCRIPTION = "性癖を暴露するカードを作成します"
 
     const image_name = req.query['image_name']
     const IMAGE = "https://firebasestorage.googleapis.com/v0/b/seiheki-bakuro.appspot.com/o/" + image_name + "?alt=media"
@@ -23,9 +23,30 @@ exports.bigben = functions.https.onRequest((req, res) => {
         <meta name="twitter:title" content="${TITLE}">
         <meta name="twitter:image" content="${IMAGE}">
         <meta name="twitter:description" content="${DESCRIPTION}">
+        <style>
+          .link-to-home {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 0.5em 1em;
+            text-decoration: none;
+            border-radius: 4px;
+            color: #ffffff;
+            background-image: linear-gradient(45deg, rgb(253, 0, 241) 0%, #ff95e8 100%);
+            box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.29);
+            border-bottom: solid 3px #c58668;
+            width: 500px;
+            height: 100px;
+            font-size: 36px;
+            text-align: center
+          }
+        </style>
       </head>
       <body>
-        ${'BONG '.repeat(3)}
+        
+        <script>
+          location.href="https://seiheki-bakuro.firebaseapp.com";
+        </script>
       </body>
     </html>`);
   });
