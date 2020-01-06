@@ -1,7 +1,8 @@
 <template>
   <div class="hello">
     <!-- input for creating SVG -->
-    <h1>あなたの性癖をここに入力しよう</h1>
+    <!-- <h1>あなたの性癖をここに入力しよう</h1> -->
+    <TitleLabel title="あなたの性癖をここに入力しよう" />
     <input v-model="line1" class="seiheki-form" type="text" placeholder="1行目（２０文字以内）" maxlength='20'><br>
     <input v-model="line2" class="seiheki-form" type="text" placeholder="2行目（２０文字以内）" maxlength='20'><br>
     <input v-model="line3" class="seiheki-form" type="text" placeholder="3行目（２０文字以内）" maxlength='20'><br>
@@ -21,6 +22,7 @@
 
 <script>
 import firebase from 'firebase'
+import TitleLabel from '@/components/Title_label.vue'
 
 // firebaseのconfig情報をペースト
 const firebaseConfig = {
@@ -56,6 +58,9 @@ const svg2imageData = (svgElement, successCallback, errorCallback) => {
 
 export default {
   name: 'hello',
+  components: { 
+    TitleLabel
+  },
   data () {
     return {
       line1: '',
@@ -141,28 +146,5 @@ export default {
     transform: translateY(4px);
     box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.2);
     border-bottom: none;
-  }
-
-  h1 {
-    position: relative;
-    color: #ff3cef;
-    font-size: 20px;
-    padding: 10px 0;
-    text-align: center;
-    margin: 1.5em 0;
-  }
-  h1:before {
-    content: "";
-    position: absolute;
-    top: -8px;
-    left: 50%;
-    width: 150px;
-    height: 58px;
-    border-radius: 50%;
-    border: 5px solid #f15ad8;
-    border-left-color: transparent;
-    border-right-color: transparent;
-    -webkit-transform: translateX(-50%);
-    transform: translateX(-50%);
   }
 </style>
