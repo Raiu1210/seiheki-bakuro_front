@@ -15,7 +15,7 @@
       <text x="50%" y="60%" font-size="8px" text-anchor="middle">{{line3}}</text>
     </svg>
 
-    <button @click="create" class="create_img_button">性癖をツイート！</button>
+    <button @click="button_action" class="create_img_button">性癖をツイート！</button>
 
   </div>
 </template>
@@ -67,16 +67,20 @@ export default {
       line2: '',
       line3: '',
       uuid: '1', // 適当に採番する
+      tweet_url: '',
       description: 'Vue.jsとFirebaseでOGP生成アプリをつくってみます',
-      tweet_url: 'まだ変わってない'
     }
   },
   methods: {
+    async button_action() {
+      await this.create()
+      this.tweet()
+    },
     async create() {
       // refでsvgCardをsvgに設定しているのでthis.$refs.svgCardで要素を取れます
-      var tweet_url
+      // var tweet_url
       var now = Date.now()
-      tweet_url = "https://seiheki-bakuro.firebaseapp.com/bigben?image_name=" + now + ".png"
+      this.tweet_url = "https://seiheki-bakuro.firebaseapp.com/bigben?image_name=" + now + ".png"
 
       await svg2imageData(this.$refs.svgCard, async (data) => {
         const sRef = firebase.storage().ref()
@@ -93,8 +97,9 @@ export default {
           message: this.description
         });
       })
-
-      const shareURL = 'https://twitter.com/intent/tweet?text=' + '私の性癖暴露カード' + '%20%23性癖暴露' + '&url=' + tweet_url;
+    },
+    async tweet() {
+      const shareURL = 'https://twitter.com/intent/tweet?text=' + '私の性癖暴露カード ' + '%20%23性癖暴露 %20%23性癖 ' + '&url=' + this.tweet_url;
       location.href = shareURL
     }
   }
